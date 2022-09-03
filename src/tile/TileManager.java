@@ -10,11 +10,13 @@ import org.jetbrains.annotations.NotNull;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 //import io.Converter;
 
@@ -40,10 +42,19 @@ public class TileManager {
         tile = new Tile[10];
         getTileImage();
 
-        String scr = "src/res/map/Level_0.ldtkl";
+        // from here
+        String src = "/map/Level_0.ldtkl";
         // default StandardCharsets.UTF_8
-        content = Files.readString(Paths.get(scr));
+
+        InputStream is = TileManager.class.getResourceAsStream(src);
+
+        assert is != null;
+        content = new BufferedReader(new InputStreamReader(is))
+                .lines().collect(Collectors.joining("\n"));
+
+        System.out.println(content);
         data = Converter.fromJsonString(content);
+        // to here... took me 1 entire F******g DAY.
     }
 
     public void getTileImage() {
@@ -90,7 +101,8 @@ public class TileManager {
 
                     for (int j = 0; j < li.getGridTiles().length; j++) {
 
-                        GridTile gt = li.getGridTiles()[j];
+                        GridTile gt;
+                        gt = li.getGridTiles()[j];
 
                         System.out.println(li.getGridTiles().length);
 
