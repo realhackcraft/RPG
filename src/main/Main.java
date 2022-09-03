@@ -1,12 +1,13 @@
 package main;
 
 import javax.swing.*;
+import java.io.IOException;
 
 public class Main {
 
-    static JFrame window = new JFrame();
+    static final JFrame window = new JFrame();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.setTitle("RPG");
