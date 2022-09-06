@@ -1,7 +1,6 @@
 package main;
 
 import entity.Player;
-import io.LevelData;
 import tile.TileManager;
 
 import javax.swing.*;
@@ -26,7 +25,7 @@ public class GamePanel extends JPanel implements Runnable {
     final Player player = new Player(this, keyH);
     Thread gameThread;
 
-    public GamePanel() throws IOException {
+    public GamePanel() {
 
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.DARK_GRAY);
@@ -68,7 +67,6 @@ public class GamePanel extends JPanel implements Runnable {
 
             if (timer >= 1000000000) {
                 Main.setTitle("RPG | FPS: " + drawCount);
-                System.out.println(drawCount);
                 drawCount = 0;
                 timer = 0;
             }
@@ -84,11 +82,13 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        LevelData data = TileManager.data;
-
         Graphics2D g2 = (Graphics2D) g;
 
-        tileM.draw(g2, data);
+        try {
+            tileM.draw(g2, "/maps/Level_0.ldtkl");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         player.draw(g2);
 

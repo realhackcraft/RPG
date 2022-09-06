@@ -4,23 +4,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class GridTile {
 
-    private long[] px;
-    private long[] src;
+    private int[] px;
+    private int[] src;
     private long f;
     private long t;
     private long[] d;
 
     @JsonProperty("px")
-    public long[] getPx() { return px; }
+    public int[] getPx() { return px; }
 
     @JsonProperty("px")
-    public void setPx(long[] value) { this.px = value; }
+    public void setPx(int[] value) { this.px = value; }
 
     @JsonProperty("src")
-    public long[] getSrc() { return src; }
+    public int[] getSrc() { return src; }
 
     @JsonProperty("src")
-    public void setSrc(long[] value) { this.src = value; }
+    public void setSrc(int[] value) { this.src = value; }
 
     @JsonProperty("f")
     public long getF() { return f; }

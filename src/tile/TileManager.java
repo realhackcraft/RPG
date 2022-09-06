@@ -23,28 +23,48 @@ import java.util.stream.Collectors;
 public class TileManager {
 
     final GamePanel gp;
-    final Tile[] tile;
 
     public static LevelData data;
     public static boolean cached = false;
 
     private ArrayList<BufferedImage> image;
-    private ArrayList<Integer> x1;
-    private ArrayList<Integer> x2;
-    private ArrayList<Integer> y1;
-    private ArrayList<Integer> y2;
+    private ArrayList<Tile> tiles;
+    private ArrayList<LayerInstance> layerInstances;
+    private int layerInstanceLength;
 
 
-    public TileManager(GamePanel gp) throws IOException {
+    public TileManager(GamePanel gp) {
+
         this.gp = gp;
+    }
+
+    public void draw(Graphics2D g2, String src) throws IOException {
+        if (cached) {
+            drawMap(g2);
+        } else {
+            loadMap(g2, src);
+            cached = true;
+        }
+    }
+
+
+    private void drawMap(Graphics2D g2) {
+        int maxJ = 0;
+        for (int i = 0; i < layerInstanceLength; i++) {
+
+            LayerInstance li = layerInstances.get(i);
+
+            for (int j = 0; j < li.getGridTiles().length; j++) {
+
+                createCroppedImage(g2, maxJ, i);
+                maxJ++;
+            }
+        }
+    }
+
+    private void loadMap(Graphics2D g2, String src) throws IOException {
+
         String content;
-
-        tile = new Tile[10];
-        getTileImage();
-
-        // from here
-        String src = "/map/Level_0.ldtkl";
-        // default StandardCharsets.UTF_8
 
         InputStream is = TileManager.class.getResourceAsStream(src);
 
@@ -52,97 +72,48 @@ public class TileManager {
         content = new BufferedReader(new InputStreamReader(is))
                 .lines().collect(Collectors.joining("\n"));
 
-        System.out.println(content);
         data = Converter.fromJsonString(content);
-        // to here... took me 1 entire F******g DAY.
-    }
 
-    public void getTileImage() {
+        tiles = new ArrayList<>();
+        layerInstances = new ArrayList<>();
+        image = new ArrayList<>();
+        ArrayList<String> tilesetRelPath = new ArrayList<>();
 
-        try {
-            tile[0] = new Tile();
-            tile[0].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/grass.png")));
+        layerInstanceLength = data.getLayerInstances().length;
 
-            tile[1] = new Tile();
-            tile[1].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/bush.png")));
+        int maxJ = 0;
+        for (int i = 0; i < layerInstanceLength; i++) {
 
-            tile[2] = new Tile();
-            tile[2].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/water.png")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+            int RI = data.getLayerInstances().length - (i + 1);
+            LayerInstance li = data.getLayerInstances()[RI];
+            layerInstances.add(li);
 
 
-    public void draw(Graphics2D g2, LevelData data) {
+            tilesetRelPath.add("/" + li.getTilesetRelPath());
+            image.add(ImageIO.read(
+                    Objects.requireNonNull(getClass().getResourceAsStream(tilesetRelPath.get(i)))));
 
-        int maxJ;
-        if (!cached) {
+            for (int j = 0; j < li.getGridTiles().length; j++) {
 
-            try {
+                GridTile gt = li.getGridTiles()[j];
 
-                maxJ = 0;
-                x1 = new ArrayList<>();
-                y1 = new ArrayList<>();
-                x2 = new ArrayList<>();
-                y2 = new ArrayList<>();
+                tiles.add(new Tile());
+                tiles.get(maxJ).imageCord = gt.getPx();
+                tiles.get(maxJ).cord = gt.getSrc();
 
-                image = new ArrayList<>();
-                ArrayList<String> tilesetRelPath = new ArrayList<>();
-
-                for (int i = 0; i < data.getLayerInstances().length; i++) {
-
-                    LayerInstance li = data.getLayerInstances()[i];
-
-
-                    tilesetRelPath.add("/" + li.getTilesetRelPath());
-                    image.add(ImageIO.read(
-                            Objects.requireNonNull(getClass().getResourceAsStream(tilesetRelPath.get(i)))));
-
-                    for (int j = 0; j < li.getGridTiles().length; j++) {
-
-                        GridTile gt;
-                        gt = li.getGridTiles()[j];
-
-                        System.out.println(li.getGridTiles().length);
-
-                        x1.add((int) gt.getPx()[0]);
-                        y1.add((int) gt.getPx()[1]);
-                        x2.add((int) gt.getSrc()[0]);
-                        y2.add((int) gt.getSrc()[1]);
-
-                        createCroppedImage(g2, maxJ, i);
-                        maxJ++;
-                    }
-                }
-
-                cached = true;
-            } catch (IOException e) {
-                e.printStackTrace();
+                maxJ++;
             }
         }
 
-        if (cached) {
-            maxJ = 0;
-            for (int i = 0; i < data.getLayerInstances().length; i++) {
-
-                LayerInstance li = data.getLayerInstances()[i];
-
-                for (int j = 0; j < li.getGridTiles().length; j++) {
-
-                    createCroppedImage(g2, maxJ, i);
-                    maxJ++;
-                }
-            }
-        }
+        drawMap(g2);
     }
 
     private void createCroppedImage(@NotNull Graphics2D g2, int maxJ, int i) {
         BufferedImage croppedImage = cropImage(image.get(i),
-                                               new Rectangle(x2.get(maxJ), y2.get(maxJ), 16, 16));
+                                               new Rectangle(tiles.get(maxJ).cord[0], tiles.get(maxJ).cord[1], 16, 16));
 
-        g2.drawImage(croppedImage, x1.get(maxJ) * gp.scale,
-                     y1.get(maxJ) * gp.scale,
+        g2.drawImage(croppedImage, tiles.get(maxJ).imageCord[0] * gp.scale,
+                     tiles.get(maxJ).imageCord[1] * gp.scale,
                      gp.tileSize, gp.tileSize,
                      null);
     }

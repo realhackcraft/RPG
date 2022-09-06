@@ -1,10 +1,10 @@
 package tile;
 
-import java.awt.image.BufferedImage;
-
 public class Tile {
 
-    public BufferedImage image;
+    public int[] imageCord = new int[2];
+    public int[] cord = new int[2];
+
     public boolean collision = false;
 
 }
