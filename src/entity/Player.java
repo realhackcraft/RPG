@@ -11,7 +11,6 @@ import java.util.Objects;
 
 public class Player extends Entity {
 
-    final GamePanel gp;
     final KeyHandler keyH;
 
     public Player(GamePanel gp, KeyHandler keyH) {

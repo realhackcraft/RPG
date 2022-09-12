@@ -13,7 +13,6 @@ public class Layer {
     private final LayerInstance li;
     private final BufferedImage tilesetImage;
     public ArrayList<Tile> tiles = new ArrayList<>();
-    public String path;
 
     public void drawLayer(Graphics2D g2) {
 

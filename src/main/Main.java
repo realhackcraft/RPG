@@ -1,6 +1,7 @@
 package main;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 
 public class Main {
@@ -8,19 +9,23 @@ public class Main {
     static final JFrame window = new JFrame();
 
     public static void main(String[] args) throws IOException {
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setResizable(false);
-        window.setTitle("RPG");
 
-        GamePanel gamePanel = new GamePanel();
-        window.add(gamePanel);
+        EventQueue.invokeLater(() -> {
+            window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            window.setResizable(false);
+            window.setTitle("RPG");
 
-        window.pack();
+            GamePanel gamePanel = new GamePanel();
+            window.add(gamePanel);
 
-        window.setLocationRelativeTo(null);
-        window.setVisible(true);
+            window.pack();
 
-        gamePanel.startGameThread();
+            window.setLocationRelativeTo(null);
+            window.setVisible(true);
+
+            gamePanel.startGameThread();
+        });
+
     }
 
     public static void setTitle(String title) {
