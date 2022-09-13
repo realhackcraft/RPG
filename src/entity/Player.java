@@ -76,7 +76,7 @@ public class Player extends Entity {
                 spriteCounter = 0;
             }
         } else {
-            // idle, test the side
+            // player is idling, test the direction
             switch (direction) {
                 case "up" -> direction = "up-idle";
                 case "down" -> direction = "down-idle";

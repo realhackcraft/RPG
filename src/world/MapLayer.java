@@ -1,4 +1,4 @@
-package tile;
+package world;
 
 import io.GridTile;
 import io.LayerInstance;
@@ -8,20 +8,21 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class Layer {
+public class MapLayer {
 
     private final LayerInstance li;
     private final BufferedImage tilesetImage;
     public ArrayList<Tile> tiles = new ArrayList<>();
 
-    public void drawLayer(Graphics2D g2) {
+    public void drawLayer(Graphics2D g2, int worldOffsetX, int worldOffsetY) {
 
         for (Tile tile : tiles) {
-            tile.draw(tilesetImage, g2);
+            tile.draw(tilesetImage, g2, worldOffsetX, worldOffsetY);
         }
+
     }
 
-    public Layer(LayerInstance li, BufferedImage tilesetImage) {
+    public MapLayer(LayerInstance li, BufferedImage tilesetImage) {
 
         this.li = li;
         this.tilesetImage = tilesetImage;

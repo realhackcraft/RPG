@@ -1,4 +1,4 @@
-package tile;
+package world;
 
 import io.Converter;
 import io.LayerInstance;
@@ -17,26 +17,32 @@ import java.util.stream.Collectors;
 
 //import io.Converter;
 
-public class TileManager {
+public class Map {
 
     final GamePanel gp;
 
     public static LevelData data;
     public static boolean cached = false;
 
-    private final ArrayList<Layer> layerInstances = new ArrayList<>();
+    private final ArrayList<MapLayer> mapLayerInstances = new ArrayList<>();
+    private final String src;
+    public final int worldOffsetX;
+    public final int worldOffsetY;
 
 
-    public TileManager(GamePanel gp) {
+    public Map(GamePanel gp, String src, int worldOffsetX, int worldOffsetY) {
 
         this.gp = gp;
+        this.src = src;
+        this.worldOffsetX = worldOffsetX;
+        this.worldOffsetY = worldOffsetY;
     }
 
-    public void draw(Graphics2D g2, String src) throws IOException {
+    public void draw(Graphics2D g2) throws IOException {
         if (cached) {
             drawMap(g2);
         } else {
-            loadMap(g2, src);
+            loadMap(g2, this.src);
             cached = true;
         }
     }
@@ -44,9 +50,8 @@ public class TileManager {
 
     private void drawMap(Graphics2D g2) {
 
-        for (Layer layer :
-                layerInstances) {
-            layer.drawLayer(g2);
+        for (MapLayer mapLayer : mapLayerInstances) {
+            mapLayer.drawLayer(g2, worldOffsetX, worldOffsetY);
         }
     }
 
@@ -54,7 +59,7 @@ public class TileManager {
 
         String content;
 
-        InputStream is = TileManager.class.getResourceAsStream(src);
+        InputStream is = Map.class.getResourceAsStream(src);
 
         assert is != null;
         content = new BufferedReader(new InputStreamReader(is))
@@ -68,13 +73,14 @@ public class TileManager {
 
             int RI = data.getLayerInstances().length - (i + 1);
             LayerInstance li = data.getLayerInstances()[RI];
-            layerInstances.add(new Layer(li, ImageIO.read(
+            mapLayerInstances.add(new MapLayer(li, ImageIO.read(
                     Objects.requireNonNull(getClass().getResourceAsStream("/" + li.getTilesetRelPath())))));
 
-            layerInstances.get(i).loadTiles(gp);
+            mapLayerInstances.get(i).loadTiles(gp);
 
         }
 
+        is.close();
         drawMap(g2);
     }
 

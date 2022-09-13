@@ -1,7 +1,7 @@
 package main;
 
 import entity.Player;
-import tile.TileManager;
+import world.World;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,7 +20,6 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenHeight = tileSize * maxScreenRow; // 576 px
     public final int FPS = 60;
 
-    final TileManager tileM = new TileManager(this);
     final KeyHandler keyH = new KeyHandler();
     final Player player = new Player(this, keyH);
     Thread gameThread;
@@ -85,7 +84,7 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
 
         try {
-            tileM.draw(g2, "/maps/Level_0.ldtkl");
+            World.load(this, g2, "/res/maps.ldtk");
         } catch (IOException e) {
             e.printStackTrace();
         }

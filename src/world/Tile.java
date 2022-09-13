@@ -1,4 +1,4 @@
-package tile;
+package world;
 
 import main.GamePanel;
 import org.jetbrains.annotations.NotNull;
@@ -14,17 +14,17 @@ public class Tile {
 
     public boolean collision = false;
 
-    public void draw(BufferedImage src, Graphics2D g2) {
+    public void draw(BufferedImage src, Graphics2D g2, int worldOffsetX, int worldOffsetY) {
 
-        createCroppedImage(g2, src);
+        drawCroppedImage(g2, src, worldOffsetX, worldOffsetY);
     }
 
-    private void createCroppedImage(@NotNull Graphics2D g2, BufferedImage src) {
+    private void drawCroppedImage(@NotNull Graphics2D g2, BufferedImage src, int worldOffsetX, int worldOffsetY) {
         BufferedImage croppedImage = cropImage(src,
                                                new Rectangle(this.cord[0], this.cord[1], 16, 16));
 
-        g2.drawImage(croppedImage, this.imageCord[0] * gp.scale,
-                     this.imageCord[1] * gp.scale,
+        g2.drawImage(croppedImage, (this.imageCord[0] + worldOffsetX) * gp.scale,
+                     (this.imageCord[1] + worldOffsetY) * gp.scale,
                      gp.tileSize, gp.tileSize,
                      null);
     }
