@@ -12,12 +12,13 @@ public class MapLayer {
 
     private final LayerInstance li;
     private final BufferedImage tilesetImage;
+    public static Graphics2D g2;
     public ArrayList<Tile> tiles = new ArrayList<>();
 
-    public void drawLayer(Graphics2D g2, int worldOffsetX, int worldOffsetY) {
+    public void drawLayer(int worldOffsetX, int worldOffsetY) {
 
         for (Tile tile : tiles) {
-            tile.draw(tilesetImage, g2, worldOffsetX, worldOffsetY);
+            tile.draw(tilesetImage, worldOffsetX, worldOffsetY);
         }
 
     }

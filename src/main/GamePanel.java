@@ -1,6 +1,9 @@
 package main;
 
 import entity.Player;
+import world.Map;
+import world.MapLayer;
+import world.Tile;
 import world.World;
 
 import javax.swing.*;
@@ -43,6 +46,7 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
     public void run() {
 
+
         double drawInterval = (double) 1000000000 / FPS;
         double delta = 0;
         long lastTime = System.nanoTime();
@@ -57,7 +61,9 @@ public class GamePanel extends JPanel implements Runnable {
             timer += (currentTime - lastTime);
             lastTime = currentTime;
 
+
             if (delta >= 1) {
+                System.out.println(System.nanoTime() - currentTime);
                 update();
                 repaint();
                 delta--;
@@ -69,6 +75,7 @@ public class GamePanel extends JPanel implements Runnable {
                 drawCount = 0;
                 timer = 0;
             }
+
 
         }
     }
@@ -83,8 +90,13 @@ public class GamePanel extends JPanel implements Runnable {
 
         Graphics2D g2 = (Graphics2D) g;
 
+        World.g2 = g2;
+        Map.g2 = g2;
+        MapLayer.g2 = g2;
+        Tile.g2 = g2;
+
         try {
-            World.load(this, g2, "/res/maps.ldtk");
+            World.load(this, "/res/maps.ldtk");
         } catch (IOException e) {
             e.printStackTrace();
         }

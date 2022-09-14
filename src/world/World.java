@@ -18,43 +18,41 @@ public class World {
     static ArrayList<Map> maps = new ArrayList<>();
 
     static boolean cached = false;
+    public static Graphics2D g2;
 
-    public static void load(GamePanel gp, Graphics2D g2, String path) throws IOException {
+    public static void load(GamePanel gp, String path) throws IOException {
+
         if (!cached) {
 
-            try {
-                InputStream is = World.class.getResourceAsStream(path);
+            InputStream is = World.class.getResourceAsStream(path);
 
-                assert is != null;
-                String content = new BufferedReader(new InputStreamReader(is))
-                        .lines().collect(Collectors.joining("\n"));
+            assert is != null;
+            String content = new BufferedReader(new InputStreamReader(is))
+                    .lines().collect(Collectors.joining("\n"));
+            is.close();
 
-                LevelData data = Converter.fromJsonString(content);
+            LevelData data = Converter.fromJsonString(content);
 
-                for (Level data1 : data.getLevels()) {
+            for (Level data1 : data.getLevels()) {
 
-                    String externalRelPath = "/" + data1.getExternalRelPath();
-                    int worldOffsetX = data1.getWorldX();
-                    int worldOffsetY = data1.getWorldY();
-                    maps.add(new Map(gp, externalRelPath, worldOffsetX, worldOffsetY));
-                }
-                is.close();
-                cached = true;
-            } catch (IOException e) {
-                e.printStackTrace();
+                String externalRelPath = "/" + data1.getExternalRelPath();
+                int worldOffsetX = data1.getWorldX();
+                int worldOffsetY = data1.getWorldY();
+                maps.add(new Map(gp, externalRelPath, worldOffsetX, worldOffsetY));
             }
+            cached = true;
 
         }
 
-        draw(g2);
+        draw();
 
     }
 
-    public static void draw(Graphics2D g2) throws IOException {
+    public static void draw() throws IOException {
 
         for (Map map : maps) {
 
-            map.draw(g2);
+            map.draw();
         }
     }
 

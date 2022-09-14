@@ -28,6 +28,7 @@ public class Map {
     private final String src;
     public final int worldOffsetX;
     public final int worldOffsetY;
+    public static Graphics2D g2;
 
 
     public Map(GamePanel gp, String src, int worldOffsetX, int worldOffsetY) {
@@ -38,24 +39,24 @@ public class Map {
         this.worldOffsetY = worldOffsetY;
     }
 
-    public void draw(Graphics2D g2) throws IOException {
+    public void draw() throws IOException {
         if (cached) {
-            drawMap(g2);
+            drawMap();
         } else {
-            loadMap(g2, this.src);
+            loadMap(this.src);
             cached = true;
         }
     }
 
 
-    private void drawMap(Graphics2D g2) {
+    private void drawMap() {
 
         for (MapLayer mapLayer : mapLayerInstances) {
-            mapLayer.drawLayer(g2, worldOffsetX, worldOffsetY);
+            mapLayer.drawLayer(worldOffsetX, worldOffsetY);
         }
     }
 
-    private void loadMap(Graphics2D g2, String src) throws IOException {
+    private void loadMap(String src) throws IOException {
 
         String content;
 
@@ -64,6 +65,7 @@ public class Map {
         assert is != null;
         content = new BufferedReader(new InputStreamReader(is))
                 .lines().collect(Collectors.joining("\n"));
+        is.close();
 
         data = Converter.fromJsonString(content);
 
@@ -80,8 +82,7 @@ public class Map {
 
         }
 
-        is.close();
-        drawMap(g2);
+        drawMap();
     }
 
 }
