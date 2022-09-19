@@ -15,10 +15,10 @@ public class MapLayer {
     public static Graphics2D g2;
     public ArrayList<Tile> tiles = new ArrayList<>();
 
-    public void drawLayer(int worldOffsetX, int worldOffsetY) {
+    public void drawLayer(int worldOffsetX, int worldOffsetY, int cameraOffsetX, int cameraOffsetY) {
 
         for (Tile tile : tiles) {
-            tile.draw(tilesetImage, worldOffsetX, worldOffsetY);
+            tile.draw(tilesetImage, worldOffsetX, worldOffsetY, cameraOffsetX, cameraOffsetY);
         }
 
     }

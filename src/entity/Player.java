@@ -2,6 +2,8 @@ package entity;
 
 import main.GamePanel;
 import main.KeyHandler;
+import main.Main;
+import world.World;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -18,36 +20,35 @@ public class Player extends Entity {
         this.gp = gp;
         this.keyH = keyH;
         setDefaultValues();
-        getPlayerImage();
+        try {
+            getPlayerImage();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         direction = "down";
     }
 
     public void setDefaultValues() {
 
-        x = 100;
-        y = 100;
+        x = Main.WIDTH / 2;
+        y = Main.HEIGHT / 2;
         speed = 5;
     }
 
-    public void getPlayerImage() {
+    public void getPlayerImage() throws IOException {
 
-        try {
-            up1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/up1.png")));
-            up2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/up2.png")));
-            down1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/down1.png")));
-            down2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/down2.png")));
-            left1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/left1.png")));
-            left2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/left2.png")));
-            right2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/right1.png")));
-            right1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/right2.png")));
-            upIdle = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/up_idle.png")));
-            downIdle = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/down_idle.png")));
-            leftIdle = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/left_idle.png")));
-            rightIdle = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/right_idle.png")));
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        up1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/up1.png")));
+        up2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/up2.png")));
+        down1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/down1.png")));
+        down2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/down2.png")));
+        left1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/left1.png")));
+        left2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/left2.png")));
+        right2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/right1.png")));
+        right1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/right2.png")));
+        upIdle = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/up_idle.png")));
+        downIdle = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/down_idle.png")));
+        leftIdle = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/left_idle.png")));
+        rightIdle = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/player/right_idle.png")));
     }
 
     public void update() {
@@ -56,16 +57,40 @@ public class Player extends Entity {
 
             if (keyH.upPressed) {
                 direction = "up";
-                y -= speed;
+
+                if (y <= (Main.HEIGHT / 2) - (25 + upIdle.getHeight()) * gp.scale) {
+                    World.cameraOffsetY += speed;
+                } else {
+                    y -= speed;
+                }
             } else if (keyH.leftPressed) {
                 direction = "left";
-                x -= speed;
+
+                if (x <= (Main.WIDTH / 2) - (25 + upIdle.getWidth()) * gp.scale) {
+                    World.cameraOffsetX += speed;
+                } else {
+                    x -= speed;
+                }
+
             } else if (keyH.downPressed) {
                 direction = "down";
-                y += speed;
+
+                if (y >= (Main.HEIGHT / 2) + (25 - upIdle.getWidth()) * gp.scale) {
+                    World.cameraOffsetY -= speed;
+                } else {
+                    y += speed;
+                }
+
+
             } else {
                 direction = "right";
-                x += speed;
+
+                if (x >= (Main.WIDTH / 2) + 25 * gp.scale) {
+                    World.cameraOffsetX -= speed;
+                } else {
+                    x += speed;
+                }
+
             }
 
             spriteCounter++;

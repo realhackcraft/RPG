@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-//import io.Converter;
 
 public class Map {
 
@@ -28,6 +27,9 @@ public class Map {
     private final String src;
     public final int worldOffsetX;
     public final int worldOffsetY;
+
+    public int cameraOffsetX;
+    public int cameraOffsetY;
     public static Graphics2D g2;
 
 
@@ -39,24 +41,24 @@ public class Map {
         this.worldOffsetY = worldOffsetY;
     }
 
-    public void draw() throws IOException {
+    public void draw(int cameraOffsetX, int cameraOffsetY) throws IOException {
         if (cached) {
-            drawMap();
+            drawMap(cameraOffsetX, cameraOffsetY);
         } else {
-            loadMap(this.src);
+            loadMap(this.src, cameraOffsetX, cameraOffsetY);
             cached = true;
         }
     }
 
 
-    private void drawMap() {
+    private void drawMap(int cameraOffsetX, int cameraOffsetY) {
 
         for (MapLayer mapLayer : mapLayerInstances) {
-            mapLayer.drawLayer(worldOffsetX, worldOffsetY);
+            mapLayer.drawLayer(worldOffsetX, worldOffsetY, cameraOffsetX, cameraOffsetY);
         }
     }
 
-    private void loadMap(String src) throws IOException {
+    private void loadMap(String src, int cameraOffsetX, int cameraOffsetY) throws IOException {
 
         String content;
 
@@ -82,7 +84,7 @@ public class Map {
 
         }
 
-        drawMap();
+        drawMap(cameraOffsetX, cameraOffsetY);
     }
 
 }

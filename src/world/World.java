@@ -20,6 +20,9 @@ public class World {
     static boolean cached = false;
     public static Graphics2D g2;
 
+    public static int cameraOffsetX = 0;
+    public static int cameraOffsetY = 0;
+
     public static void load(GamePanel gp, String path) throws IOException {
 
         if (!cached) {
@@ -52,7 +55,7 @@ public class World {
 
         for (Map map : maps) {
 
-            map.draw();
+            map.draw(cameraOffsetX, cameraOffsetY);
         }
     }
 

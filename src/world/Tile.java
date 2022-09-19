@@ -17,18 +17,19 @@ public class Tile {
 
     private BufferedImage croppedImage;
 
-    public void draw(BufferedImage src, int worldOffsetX, int worldOffsetY) {
+    public void draw(BufferedImage src, int worldOffsetX, int worldOffsetY, int cameraOffsetX, int cameraOffsetY) {
 
-        drawCroppedImage(g2, src, worldOffsetX, worldOffsetY);
+        drawCroppedImage(g2, src, worldOffsetX, worldOffsetY, cameraOffsetX, cameraOffsetY);
     }
 
-    private void drawCroppedImage(@NotNull Graphics2D g2, BufferedImage src, int worldOffsetX, int worldOffsetY) {
+    private void drawCroppedImage(@NotNull Graphics2D g2, BufferedImage src, int worldOffsetX, int worldOffsetY,
+                                  int cameraOffsetX, int cameraOffsetY) {
         if (croppedImage == null) {
             croppedImage = cropImage(src, new Rectangle(this.cord[0], this.cord[1], 16, 16));
         }
 
-        g2.drawImage(croppedImage, (this.imageCord[0] + worldOffsetX) * gp.scale,
-                     (this.imageCord[1] + worldOffsetY) * gp.scale,
+        g2.drawImage(croppedImage, ((this.imageCord[0] + worldOffsetX) * gp.scale) + cameraOffsetX,
+                     ((this.imageCord[1] + worldOffsetY) * gp.scale) + cameraOffsetY,
                      gp.tileSize, gp.tileSize,
                      null);
     }

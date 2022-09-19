@@ -8,6 +8,10 @@ public class Main {
 
     static final JFrame window = new JFrame();
 
+    public static int WIDTH;
+    public static int HEIGHT;
+
+
     public static void main(String[] args) throws IOException {
 
         EventQueue.invokeLater(() -> {
@@ -19,6 +23,9 @@ public class Main {
             window.add(gamePanel);
 
             window.pack();
+
+            HEIGHT = window.getHeight();
+            WIDTH = window.getWidth();
 
             window.setLocationRelativeTo(null);
             window.setVisible(true);
