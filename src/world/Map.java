@@ -20,8 +20,8 @@ public class Map {
 
     final GamePanel gp;
 
-    public static LevelData data;
-    public static boolean cached = false;
+    public LevelData data;
+    public boolean cached = false;
 
     private final ArrayList<MapLayer> mapLayerInstances = new ArrayList<>();
     private final String src;
