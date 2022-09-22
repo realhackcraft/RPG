@@ -45,6 +45,8 @@ public class World {
             }
             cached = true;
 
+            gp.setBackground(Color.decode(data.getBgColor()));
+
         }
 
         draw();

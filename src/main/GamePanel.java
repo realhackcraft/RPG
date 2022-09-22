@@ -24,13 +24,12 @@ public class GamePanel extends JPanel implements Runnable {
     public final int FPS = 60;
 
     final KeyHandler keyH = new KeyHandler();
-    final Player player = new Player(this, keyH);
+    public final Player player = new Player(this, keyH);
     Thread gameThread;
 
     public GamePanel() {
 
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-        this.setBackground(Color.DARK_GRAY);
         this.setDoubleBuffered(true);
 
         this.addKeyListener(keyH);
@@ -63,7 +62,6 @@ public class GamePanel extends JPanel implements Runnable {
 
 
             if (delta >= 1) {
-                System.out.println(System.nanoTime() - currentTime);
                 update();
                 repaint();
                 delta--;
@@ -74,6 +72,8 @@ public class GamePanel extends JPanel implements Runnable {
                 Main.setTitle("RPG | FPS: " + drawCount);
                 drawCount = 0;
                 timer = 0;
+                System.out.println(Tile.a);
+                Tile.a = 0;
             }
 
 

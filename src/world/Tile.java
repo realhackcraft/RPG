@@ -1,6 +1,7 @@
 package world;
 
 import main.GamePanel;
+import main.Main;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -16,6 +17,7 @@ public class Tile {
     public static Graphics2D g2;
 
     private BufferedImage croppedImage;
+    public static int a = 0;
 
     public void draw(BufferedImage src, int worldOffsetX, int worldOffsetY, int cameraOffsetX, int cameraOffsetY) {
 
@@ -27,11 +29,24 @@ public class Tile {
         if (croppedImage == null) {
             croppedImage = cropImage(src, new Rectangle(this.cord[0], this.cord[1], 16, 16));
         }
+        if ((this.imageCord[0] + worldOffsetX) * gp.scale + cameraOffsetX + Main.EXTRA_TILES_X * gp.tileSize > 0 &&
+                (this.imageCord[0] + worldOffsetX) * gp.scale + cameraOffsetX - Main.EXTRA_TILES_X * gp.tileSize < gp.screenWidth &&
+                (this.imageCord[1] + worldOffsetY) * gp.scale + cameraOffsetY + Main.EXTRA_TILES_Y * gp.tileSize > 0 &&
+                (this.imageCord[1] + worldOffsetY) * gp.scale + cameraOffsetY - Main.EXTRA_TILES_Y * gp.tileSize < gp.screenHeight) {
 
-        g2.drawImage(croppedImage, ((this.imageCord[0] + worldOffsetX) * gp.scale) + cameraOffsetX,
-                     ((this.imageCord[1] + worldOffsetY) * gp.scale) + cameraOffsetY,
-                     gp.tileSize, gp.tileSize,
-                     null);
+            g2.drawImage(croppedImage, ((this.imageCord[0] + worldOffsetX) * gp.scale) + cameraOffsetX,
+                         ((this.imageCord[1] + worldOffsetY) * gp.scale) + cameraOffsetY,
+                         gp.tileSize, gp.tileSize,
+                         null);
+
+            System.out.println();
+            System.out.println("CORD.X: " + this.imageCord[0]);
+            System.out.println("CORD.Y: " + this.imageCord[1]);
+            System.out.println();
+
+            a++;
+        }
+
     }
 
     private BufferedImage cropImage(@NotNull BufferedImage src, @NotNull Rectangle rect) {
